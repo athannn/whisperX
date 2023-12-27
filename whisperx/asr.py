@@ -53,13 +53,13 @@ class WhisperModel(faster_whisper.WhisperModel):
         result = self.model.generate(
                 encoder_output,
                 [prompt] * batch_size,
-                return_scores=True,
                 beam_size=options.beam_size,
                 patience=options.patience,
                 length_penalty=options.length_penalty,
                 max_length=self.max_length,
                 suppress_blank=options.suppress_blank,
                 suppress_tokens=options.suppress_tokens,
+                return_scores=True
             )
 
         avg_logprobs = []
@@ -83,7 +83,7 @@ class WhisperModel(faster_whisper.WhisperModel):
 
         text = decode_batch(tokens_batch)
 
-        return {'text': text, 'avg_logprob': avg_logprobs}  # Return as a dictionary
+        return {'text': text, 'avg_logprob': avg_logprobs}  # Return as a dictionary 
 
     def encode(self, features: np.ndarray) -> ctranslate2.StorageView:
         # When the model is running on multiple GPUs, the encoder output should be moved
@@ -161,7 +161,7 @@ class FasterWhisperPipeline(Pipeline):
 
     def _forward(self, model_inputs):
         model_outputs = self.model.generate_segment_batched(model_inputs['inputs'], self.tokenizer, self.options)
-        return model_outputs
+        return model_outputs        
 
     def postprocess(self, model_outputs):
         return model_outputs
